@@ -283,10 +283,8 @@ int  main(void)
     
     hal_init();
 
-// #if(_BUILD_FOR_DTM_==1)
-//     rf_phy_direct_test();
-// #endif
-	rf_DTM_RX_rfoffset_calibration();
+
+	// rf_DTM_RX_rfoffset_calibration();
         
 	LOG("SDK Version ID %08x \n",SDK_VER_RELEASE_ID);
 //	LOG("rfClk %d rcClk %d sysClk %d tpCap[%02x %02x]\n",g_rfPhyClkSel,g_clk32K_config,g_system_clk,g_rfPhyTpCal0,g_rfPhyTpCal1);

@@ -118,7 +118,7 @@ static uint8 scanRspData[] =
 #elif(LC_RGBLight_Module == RGBWLight)
 	0xFE,
 #endif
-    0x04, 0x01,	//software version
+    0x04, 0x03,	//software version
 	0x00,
 };
 
@@ -284,7 +284,7 @@ void SimpleBLEPeripheral_Init( uint8 task_id )
 	ota_app_AddService_UseKey(8,OTA_Passward_AscII);
 
 
-    #if (1)
+    #if (0)
     {
 		uint8_t mtuSet = 247;
 		llInitFeatureSet2MPHY(TRUE);

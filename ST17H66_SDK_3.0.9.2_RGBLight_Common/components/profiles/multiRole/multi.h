@@ -30,8 +30,8 @@ extern "C"
 /** @defgroup Multi_Constants Multi GAPRole Constants
     @{
 */
-#define   MAX_CONNECTION_NUM          2		///5//
-#define   MAX_CONNECTION_SLAVE_NUM   	1		///3// 
+#define   MAX_CONNECTION_NUM          2
+#define   MAX_CONNECTION_SLAVE_NUM    1
 #define   MAX_CONNECTION_MASTER_NUM   ( (MAX_CONNECTION_NUM >= MAX_CONNECTION_SLAVE_NUM)?\
                                         (MAX_CONNECTION_NUM - MAX_CONNECTION_SLAVE_NUM):0)
 #if( MAX_CONNECTION_NUM < MAX_CONNECTION_SLAVE_NUM )

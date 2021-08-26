@@ -44,7 +44,7 @@ static	void	LC_ReadReservedData(void)
 	Printf_Hex(Flash_Read_Buffer+16,16);
 	if(Flash_Read_Buffer[0] == 0x55){
 		LC_RGBLight_Param.RGB_Light_Mode			=	Flash_Read_Buffer[1];
-		LC_RGBLight_Param.RGB_Light_Color_Sequence	=	Flash_Read_Buffer[14];
+
 		if((LC_RGBLight_Param.RGB_Light_Mode == RGB_Plate_Mode) || \
 			((LC_RGBLight_Param.RGB_Light_Mode >= RGB_Static_Red) && (LC_RGBLight_Param.RGB_Light_Mode <= RGB_Static_White))){
 			LC_RGBLight_Param.RGB_rValue	=	(uint16)((Flash_Read_Buffer[2] << 8)&0xff00) + Flash_Read_Buffer[3];
@@ -129,31 +129,10 @@ void	LC_GPIO_RGBPinInit(void)
  */
 void	LC_PWMSetRGBValue(void)
 {
-	if(LC_RGBLight_Param.RGB_Light_Color_Sequence == 0){
-		hal_pwm_set_count_val(PWM_CH0, LC_RGBLight_Param.RGB_rValue, RGB_PWM_MAX);
-		hal_pwm_set_count_val(PWM_CH1, LC_RGBLight_Param.RGB_gValue, RGB_PWM_MAX);
-		hal_pwm_set_count_val(PWM_CH2, LC_RGBLight_Param.RGB_bValue, RGB_PWM_MAX);
-	}else if(LC_RGBLight_Param.RGB_Light_Color_Sequence == 1){
-		hal_pwm_set_count_val(PWM_CH0, LC_RGBLight_Param.RGB_rValue, RGB_PWM_MAX);
-		hal_pwm_set_count_val(PWM_CH1, LC_RGBLight_Param.RGB_bValue, RGB_PWM_MAX);
-		hal_pwm_set_count_val(PWM_CH2, LC_RGBLight_Param.RGB_gValue, RGB_PWM_MAX);
-	}else if(LC_RGBLight_Param.RGB_Light_Color_Sequence == 2){
-		hal_pwm_set_count_val(PWM_CH0, LC_RGBLight_Param.RGB_gValue, RGB_PWM_MAX);
-		hal_pwm_set_count_val(PWM_CH1, LC_RGBLight_Param.RGB_rValue, RGB_PWM_MAX);
-		hal_pwm_set_count_val(PWM_CH2, LC_RGBLight_Param.RGB_bValue, RGB_PWM_MAX);
-	}else if(LC_RGBLight_Param.RGB_Light_Color_Sequence == 3){
-		hal_pwm_set_count_val(PWM_CH0, LC_RGBLight_Param.RGB_gValue, RGB_PWM_MAX);
-		hal_pwm_set_count_val(PWM_CH1, LC_RGBLight_Param.RGB_bValue, RGB_PWM_MAX);
-		hal_pwm_set_count_val(PWM_CH2, LC_RGBLight_Param.RGB_rValue, RGB_PWM_MAX);
-	}else if(LC_RGBLight_Param.RGB_Light_Color_Sequence == 4){
-		hal_pwm_set_count_val(PWM_CH0, LC_RGBLight_Param.RGB_bValue, RGB_PWM_MAX);
-		hal_pwm_set_count_val(PWM_CH1, LC_RGBLight_Param.RGB_rValue, RGB_PWM_MAX);
-		hal_pwm_set_count_val(PWM_CH2, LC_RGBLight_Param.RGB_gValue, RGB_PWM_MAX);
-	}else if(LC_RGBLight_Param.RGB_Light_Color_Sequence == 5){
-		hal_pwm_set_count_val(PWM_CH0, LC_RGBLight_Param.RGB_bValue, RGB_PWM_MAX);
-		hal_pwm_set_count_val(PWM_CH1, LC_RGBLight_Param.RGB_gValue, RGB_PWM_MAX);
-		hal_pwm_set_count_val(PWM_CH2, LC_RGBLight_Param.RGB_rValue, RGB_PWM_MAX);
-	}
+	hal_pwm_set_count_val(PWM_CH0, LC_RGBLight_Param.RGB_rValue, RGB_PWM_MAX);
+	hal_pwm_set_count_val(PWM_CH1, LC_RGBLight_Param.RGB_gValue, RGB_PWM_MAX);
+	hal_pwm_set_count_val(PWM_CH2, LC_RGBLight_Param.RGB_bValue, RGB_PWM_MAX);
+
 #if(LC_RGBLight_Module == RGBWLight)
 	hal_pwm_set_count_val(PWM_CH3, LC_RGBLight_Param.RGB_wValue, RGB_PWM_MAX);
 #endif
@@ -307,23 +286,7 @@ uint16	LC_UI_Led_Buzzer_ProcessEvent(uint8 task_id, uint16 events)
 					}
 				}
 			}
-			//	set RGB color sequence
-			else if((LC_App_Set_Param.app_write_data[1] == 0x06) && (LC_App_Set_Param.app_write_data[2] == 0x81)){
-				if((LC_App_Set_Param.app_write_data[3] == 0x01) && (LC_App_Set_Param.app_write_data[4] == 0x02) && (LC_App_Set_Param.app_write_data[5] == 0x03)){
-					LC_RGBLight_Param.RGB_Light_Color_Sequence	=	0;
-				}else if((LC_App_Set_Param.app_write_data[3] == 0x01) && (LC_App_Set_Param.app_write_data[4] == 0x03) && (LC_App_Set_Param.app_write_data[5] == 0x02)){
-					LC_RGBLight_Param.RGB_Light_Color_Sequence	=	1;
-				}else if((LC_App_Set_Param.app_write_data[3] == 0x02) && (LC_App_Set_Param.app_write_data[4] == 0x01) && (LC_App_Set_Param.app_write_data[5] == 0x03)){
-					LC_RGBLight_Param.RGB_Light_Color_Sequence	=	2;
-				}else if((LC_App_Set_Param.app_write_data[3] == 0x02) && (LC_App_Set_Param.app_write_data[4] == 0x03) && (LC_App_Set_Param.app_write_data[5] == 0x01)){
-					LC_RGBLight_Param.RGB_Light_Color_Sequence	=	3;
-				}else if((LC_App_Set_Param.app_write_data[3] == 0x03) && (LC_App_Set_Param.app_write_data[4] == 0x01) && (LC_App_Set_Param.app_write_data[5] == 0x02)){
-					LC_RGBLight_Param.RGB_Light_Color_Sequence	=	4;
-				}else if((LC_App_Set_Param.app_write_data[3] == 0x03) && (LC_App_Set_Param.app_write_data[4] == 0x02) && (LC_App_Set_Param.app_write_data[5] == 0x01)){
-					LC_RGBLight_Param.RGB_Light_Color_Sequence	=	5;
-				}
-				LC_RGBLight_Reserve_Mode();
-			}
+
 			if(LC_RGBLight_Param.RGB_Light_State == State_On){
 				//	RGBLight Static Color Plate
 				if((LC_App_Set_Param.app_write_data[1] == 0x07) && (LC_App_Set_Param.app_write_data[2] == 0x05)){
@@ -459,7 +422,7 @@ uint16	LC_UI_Led_Buzzer_ProcessEvent(uint8 task_id, uint16 events)
 
 		Flash_Reserved_Mode[12]	=	(uint8)((LC_RGBLight_Param.RGB_Mode_Change_Speed >> 8) & 0xff);
 		Flash_Reserved_Mode[13]	=	(uint8)(LC_RGBLight_Param.RGB_Mode_Change_Speed  & 0xff);
-		Flash_Reserved_Mode[14]	=	LC_RGBLight_Param.RGB_Light_Color_Sequence;
+
 		osal_snv_write(0x88, 16, Flash_Reserved_Mode);
 		LOG("write flash mode\n");
 		return(events ^ UI_EVENT_LEVEL4);
